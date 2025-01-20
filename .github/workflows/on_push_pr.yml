@@ -1,0 +1,9 @@
+name: Run workflows on push and pull request
+
+on:
+    push:
+        branches: '*'
+
+jobs:
+    run-unit-tests:
+        uses: ./.github/workflows/run_unit_tests.yml
