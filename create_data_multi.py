@@ -5,35 +5,31 @@ import random
 import sys
 from datetime import datetime
 
-lat_seed = 0
-lon_seed = 0
-alt_seed = 0
-latSeed = False
-lonSeed = False
-altSeed = False
+lat_seed = None
+lon_seed = None
+alt_seed = None
 
-if len(sys.argv) > 1:
-    lat_seed = float(sys.argv[1])
-    latSeed = True
-if len(sys.argv) > 2:
-    lon_seed = float(sys.argv[2])
-    lonSeed = True
-if len(sys.argv) > 3:
-    alt_seed = float(sys.argv[3])
-    altSeed = True
+# Changed this to a function as running this outside of __main__ causes issues
+def parse_argv():
+    if len(sys.argv) > 1:
+        lat_seed = float(sys.argv[1])
+    if len(sys.argv) > 2:
+        lon_seed = float(sys.argv[2])
+    if len(sys.argv) > 3:
+        alt_seed = float(sys.argv[3])
 
 
 # Function to generate random GPS coordinates
 def generate_gps():
-    if latSeed:
+    if lat_seed is not None:
         lat = round(random.uniform(lat_seed-1, lat_seed+1), 2)
     else:
-        lat = round(random.uniform(-180.0, 180.0), 2)
-    if lonSeed:
+        lat = round(random.uniform(-90.0, 90.0), 2) # latitude is 90 deg. south to 90 deg. north, not 180
+    if lon_seed is not None:
         lon = round(random.uniform(lon_seed-1, lon_seed+1), 2)
     else:
         lon = round(random.uniform(-180.0, 180.0), 2)
-    if altSeed:
+    if alt_seed is not None:
         alt = random.uniform(alt_seed-10, alt_seed+10)
     else:
         alt = random.uniform(0, 1000)  # Altitude in meters
@@ -236,6 +232,7 @@ def insert_dac_data():
 
 # Main function
 if __name__ == "__main__":
+    parse_argv()
     create_gps_database()
     insert_gps_data()
     create_accel_database()

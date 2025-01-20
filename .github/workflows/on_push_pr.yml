@@ -3,6 +3,7 @@ name: Run workflows on push and pull request
 on:
     push:
         branches: '*'
+    pull_request:
 
 jobs:
     run-unit-tests:

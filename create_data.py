@@ -10,7 +10,7 @@ lon_seed = None
 alt_seed = None
 
 # Changed this to a function as running this outside of __main__ causes issues
-def parseargv():
+def parse_argv():
     if len(sys.argv) > 1:
         lat_seed = float(sys.argv[1])
     if len(sys.argv) > 2:
