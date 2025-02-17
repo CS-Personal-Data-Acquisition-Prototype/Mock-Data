@@ -2,6 +2,8 @@
 
 import sqlite3
 import csv
+import socket
+import time
 
 datafile = "mockdata.csv"
 
@@ -68,14 +70,47 @@ def read_data():
         formatted_row = format_row(row, column_widths)  # Format each row
         print(" | ".join(formatted_row))
 
-    # Write to CSV
-    with open(datafile, 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(column_names)
-        writer.writerows(rows)
+    # Send data to Pi
+    send_data_to_server(rows)
 
-    # Close the connection
-    conn.close()
+
+def send_data_to_server(rows):
+    server_ip = "0000.0000.0000.0000"  # Modify to have the IP of the Raspberry Pi
+    server_port = 7878
+    max_retries = 3
+    retry_delay = 2
+
+    for attempt in range(max_retries):
+        try:
+            print(f"\nAttempt {attempt + 1}/{max_retries}")
+            
+            print(f"\nCreating socket for {server_ip}:{server_port}")
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(10)
+                
+                # Set socket options
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                
+                # Don't bind to specific interface - let OS handle routing
+                print(f"Attempting connection...")
+                s.connect((server_ip, server_port))
+                print("Connected successfully!")
+                
+                # Send data as CSV lines
+                for row in rows:
+                    data = ",".join(map(str, row)) + "\n"
+                    s.sendall(data.encode('utf-8'))
+                    print(f"Sent: {data.strip()}")
+                print("Data sent successfully")
+                return
+                
+        except Exception as e:
+            print(f"Connection attempt {attempt + 1} failed: {e}")
+            if attempt < max_retries - 1:
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+            else:
+                raise
 
 
 if __name__ == "__main__":
