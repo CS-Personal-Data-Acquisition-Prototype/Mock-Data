@@ -3,14 +3,15 @@
 import sqlite3
 import random
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
-lat_seed = None
-lon_seed = None
-alt_seed = None
+lat_seed = 44.56457
+lon_seed = -123.26204
+alt_seed = 256
 
 # Changed this to a function as running this outside of __main__ causes issues
 def parse_argv():
+    global lat_seed, lon_seed, alt_seed
     if len(sys.argv) > 1:
         lat_seed = float(sys.argv[1])
     if len(sys.argv) > 2:
@@ -83,9 +84,25 @@ def create_database():
 def insert_mock_data():
     conn = sqlite3.connect("data_acquisition.db")
     cursor = conn.cursor()
+    
+    # Define data generation parameters
+    SAMPLE_RATE = 100  # samples per second
+    DURATION = 60     # seconds (1 minute)
+    TOTAL_SAMPLES = SAMPLE_RATE * DURATION
+    
+    # Generate a session ID
+    session_id = int(datetime.now().timestamp())
+    
+    # Generate start time and calculate time increments
+    start_time = datetime.now()
+    
+    print(f"Generating {TOTAL_SAMPLES} samples (1 minute of data at {SAMPLE_RATE}Hz)...")
 
-    for _ in range(100):  # Generate 100 mock data entries
-        timestamp = datetime.now().isoformat()
+    for i in range(TOTAL_SAMPLES):
+        # Create timestamp with proper increments
+        current_time = start_time + timedelta(seconds=i/SAMPLE_RATE)
+        timestamp = current_time.isoformat()
+        
         lat, lon, alt = generate_gps()
         accel, gyro = generate_accel_gyro()
         dac = generate_dac()
@@ -100,7 +117,7 @@ def insert_mock_data():
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
             (
-                None,
+                session_id,
                 timestamp,
                 lat,
                 lon,
@@ -117,10 +134,13 @@ def insert_mock_data():
                 dac[3],
             ),
         )
+        
+        # Show progress
+        if i % 500 == 0:
+            print(f"Generated {i}/{TOTAL_SAMPLES} samples")
+            conn.commit()
 
-        conn.commit()
-        # time.sleep(0.1)  # Simulate a delay between data entries
-
+    conn.commit()
     conn.close()
 
 
