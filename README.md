@@ -16,6 +16,9 @@ This toolkit consists of two main components:
    ```
    pip install pyserial sqlite3
    ```
+   
+   Note: The `pyserial` package is required for USB serial communication with the Raspberry Pi.
+   If you get the error "Import 'serial' could not be resolved from source", run the above command.
 
 ## Usage Instructions 
 
