@@ -48,10 +48,10 @@ impl DataPoint {
         }
     }
 
-    #[allow(unused)]
     pub fn to_string(&self) -> String {
+        //TODO: Figure out what the ECE data format will be (JSON, CSV, all at once, separate, ect)
         format!(
-            "timestamp: {}, gps: (lat {}, lon {}), accel: (x {}, y {}, z {}), gyro: (x {}, y {}, z {}), mag: (x {}, y {}, z {}), force: {}, linear: {}, string: {}",
+            r#"{{"timestamp": "{}", "sensor_blob": {{"lat": {}, "lon": {}, "accel_x": {}, "accel_y": {}, "accel_z": {}, "gyro_x": {}, "gyro_y": {}, "gyro_z": {}, "mag_x": {}, "mag_y": {}, "mag_z": {}, "force": {}, "linear": {}, "string": {}}} }}"#,
             self.timestamp,
             self.gps.0,
             self.gps.1,
@@ -68,31 +68,6 @@ impl DataPoint {
             self.linear,
             self.string,
         )
-    }
-
-    pub fn to_bytes(&self) -> Vec<u8> {
-        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<DataPoint>());
-        bytes.extend(&self.timestamp.clone().into_bytes());
-
-        bytes.extend(&self.gps.0.to_le_bytes());
-        bytes.extend(&self.gps.1.to_le_bytes());
-
-        bytes.extend(&self.accel.0.to_le_bytes());
-        bytes.extend(&self.accel.1.to_le_bytes());
-        bytes.extend(&self.accel.2.to_le_bytes());
-
-        bytes.extend(&self.gyro.0.to_le_bytes());
-        bytes.extend(&self.gyro.1.to_le_bytes());
-        bytes.extend(&self.gyro.2.to_le_bytes());
-
-        bytes.extend(&self.mag.0.to_le_bytes());
-        bytes.extend(&self.mag.1.to_le_bytes());
-        bytes.extend(&self.mag.2.to_le_bytes());
-
-        bytes.extend(&self.force.to_le_bytes());
-        bytes.extend(&self.linear.to_le_bytes());
-        bytes.extend(&self.string.to_le_bytes());
-        bytes
     }
 }
 

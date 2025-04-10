@@ -7,3 +7,5 @@ edition = "2021"
 rand = "0.9"
 chrono = "0.4"
 tungstenite = "0.26.2"
+toml = "0.8.2"
+serde = { version = "1.0.219", features = ["derive"] }

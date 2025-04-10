@@ -1,5 +1,6 @@
 # Ignore configuration files
 config.ini
+*config.toml
 
 # Ignore database files
 *.db
