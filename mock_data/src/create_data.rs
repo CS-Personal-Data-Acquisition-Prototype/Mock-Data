@@ -1,35 +1,35 @@
 use chrono::Utc;
 use rand::{rngs::ThreadRng, Rng};
 
-const FORCE_SEED: u32 = 15;
-const FORCE_RANGE: u32 = 10;
+const FORCE_SEED: u16 = 15;
+const FORCE_RANGE: u16 = 10;
 
-const LINEAR_SEED: u32 = 12;
-const LINEAR_RANGE: u32 = 6;
+const LINEAR_SEED: u16 = 12;
+const LINEAR_RANGE: u16 = 6;
 
-const STRING_SEED: u32 = 10;
-const STRING_RANGE: u32 = 8;
+const STRING_SEED: u16 = 10;
+const STRING_RANGE: u16 = 8;
 
-const ACCEL_SEED: f64 = 0.;
-const ACCEL_RANGE: f64 = 5.;
-const GYRO_SEED: f64 = 0.;
-const GYRO_RANGE: f64 = 10.;
-const MAG_SEED: f64 = 0.;
-const MAG_RANGE: f64 = 50.;
+const ACCEL_SEED: f32 = 0.;
+const ACCEL_RANGE: f32 = 5.;
+const GYRO_SEED: f32 = 0.;
+const GYRO_RANGE: f32 = 10.;
+const MAG_SEED: f32 = 0.;
+const MAG_RANGE: f32 = 50.;
 
-const LAT_SEED: f64 = 44.56457;
-const LON_SEED: f64 = -123.26204;
-const GPS_RANGE: f64 = 1.;
+const LAT_SEED: f32 = 44.56457;
+const LON_SEED: f32 = -123.26204;
+const GPS_RANGE: f32 = 1.;
 
 pub struct DataPoint {
     timestamp: String,
-    gps: (f64, f64),
-    accel: (f64, f64, f64),
-    gyro: (f64, f64, f64),
-    mag: (f64, f64, f64),
-    force: u32,
-    linear: u32,
-    string: u32,
+    gps: (f32, f32),
+    accel: (f32, f32, f32),
+    gyro: (f32, f32, f32),
+    mag: (f32, f32, f32),
+    force: u16,
+    linear: u16,
+    string: u16,
 }
 
 impl DataPoint {
@@ -75,26 +75,26 @@ fn get_timestamp() -> String {
     Utc::now().format("%Y-%m-%d %H:%M:%S%.9f").to_string()
 }
 
-fn gen_force(rng: &mut ThreadRng) -> u32 {
+fn gen_force(rng: &mut ThreadRng) -> u16 {
     rng.random_range((FORCE_SEED - FORCE_RANGE)..=(FORCE_SEED + FORCE_RANGE))
 }
 
-fn gen_gps(rng: &mut ThreadRng) -> (f64, f64) {
+fn gen_gps(rng: &mut ThreadRng) -> (f32, f32) {
     (
         rng.random_range((LAT_SEED - GPS_RANGE)..=(LAT_SEED + GPS_RANGE)),
         rng.random_range((LON_SEED - GPS_RANGE)..=(LON_SEED + GPS_RANGE)),
     )
 }
 
-fn gen_linear(rng: &mut ThreadRng) -> u32 {
+fn gen_linear(rng: &mut ThreadRng) -> u16 {
     rng.random_range((LINEAR_SEED - LINEAR_RANGE)..=(LINEAR_SEED + LINEAR_RANGE))
 }
 
-fn gen_string(rng: &mut ThreadRng) -> u32 {
+fn gen_string(rng: &mut ThreadRng) -> u16 {
     rng.random_range((STRING_SEED - STRING_RANGE)..=(STRING_SEED + STRING_RANGE))
 }
 
-fn gen_9dof(rng: &mut ThreadRng) -> (f64, f64, f64, f64, f64, f64, f64, f64, f64) {
+fn gen_9dof(rng: &mut ThreadRng) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
     (
         rng.random_range((ACCEL_SEED - ACCEL_RANGE)..=(ACCEL_SEED + ACCEL_RANGE)),
         rng.random_range((ACCEL_SEED - ACCEL_RANGE)..=(ACCEL_SEED + ACCEL_RANGE)),
