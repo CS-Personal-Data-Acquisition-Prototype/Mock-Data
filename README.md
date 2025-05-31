@@ -4,7 +4,10 @@
 A mock data generation crate built in Rust to test throughout and latency with a mock real-time sensor system. Sends data as a JSON string utilizing websockets for increased throughput.
 
 ### Features
-- 
+- Data points are generated as strongly typed structs
+- Generates data points around constant ranges
+- Utilizes thread safe RNG systems
+- Utilizes websockets for increased throughput
 
 ### Repository Structure
 - mock_data/
