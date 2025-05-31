@@ -1,7 +1,7 @@
 # Mock Data
 ## Overview
 ### Purpose
-A remake of the Python scripts as a Rust crate.
+A mock data generation crate built in Rust to test throughout and latency with a mock real-time sensor system. Sends data as a JSON string utilizing websockets for increased throughput.
 
 ### Features
 - 
